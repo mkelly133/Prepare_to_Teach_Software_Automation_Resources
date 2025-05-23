@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from ipywidgets import Output
 
-plt.style.use('./deeplearning.mplstyle')
+plt.style.use('ggplot')
 dlblue = '#0096ff'; dlorange = '#FF9300'; dldarkred='#C00000'; dlmagenta='#FF40FF'; dlpurple='#7030A0';
 dlcolors = [dlblue, dlorange, dldarkred, dlmagenta, dlpurple]
 dlc = dict(dlblue = '#0096ff', dlorange = '#FF9300', dldarkred='#C00000', dlmagenta='#FF40FF', dlpurple='#7030A0')
@@ -109,7 +109,7 @@ def compute_gradient(X, y, w, b):
 
     return dj_db,dj_dw
 
-def compute_model_output(x, m, b):
+def compute_model_output(x, w, b):
     """
     Computes the prediction of a linear model
     Args:
@@ -121,7 +121,7 @@ def compute_model_output(x, m, b):
     X = x.shape[0]
     y_pred = np.zeros(X)
     for i in range(X):
-        y_pred[i] = m * x[i].item() + b
+        y_pred[i] = w * x[i].item() + b
     return y_pred
 
 np.set_printoptions(precision=2)
@@ -129,7 +129,7 @@ np.set_printoptions(precision=2)
 dlc = dict(dlblue = '#0096ff', dlorange = '#FF9300', dldarkred='#C00000', dlmagenta='#FF40FF', dlpurple='#7030A0')
 dlblue = '#0096ff'; dlorange = '#FF9300'; dldarkred='#C00000'; dlmagenta='#FF40FF'; dlpurple='#7030A0'
 dlcolors = [dlblue, dlorange, dldarkred, dlmagenta, dlpurple]
-plt.style.use('./deeplearning.mplstyle')
+plt.style.use('ggplot')
 
 def sigmoid(z):
     """
@@ -226,7 +226,7 @@ def compute_cost_matrix(X, y, w, b, logistic=False, lambda_=0, safe=True):
     Returns:
       total_cost: (scalar)                cost
     """
-    m = X.shape[0]
+    w = X.shape[0]
     y = y.reshape(-1,1)             # ensure 2D
     w = w.reshape(-1,1)             # ensure 2D
     if logistic:
@@ -391,14 +391,14 @@ def draw_vthresh(ax,x):
     xlim = ax.get_xlim()
     ax.fill_between([xlim[0], x], [ylim[1], ylim[1]], alpha=0.2, color=dlblue)
     ax.fill_between([x, xlim[1]], [ylim[1], ylim[1]], alpha=0.2, color=dldarkred)
-    ax.annotate("z >= 0", xy= [x,0.5], xycoords='data',
-                xytext=[30,5],textcoords='offset points')
+    ax.annotate(f"z >= {x}", xy= [x,0.5], xycoords='data',
+                xytext=[30,5],textcoords='offset points', color='green')
     d = FancyArrowPatch(
         posA=(x, 0.5), posB=(x+3, 0.5), color=dldarkred,
         arrowstyle='simple, head_width=5, head_length=10, tail_width=0.0',
     )
     ax.add_artist(d)
-    ax.annotate("z < 0", xy= [x,0.5], xycoords='data',
+    ax.annotate(f"z < {x}", xy= [x,0.5], xycoords='data',
                  xytext=[-50,5],textcoords='offset points', ha='left')
     f = FancyArrowPatch(
         posA=(x, 0.5), posB=(x-3, 0.5), color=dlblue,
